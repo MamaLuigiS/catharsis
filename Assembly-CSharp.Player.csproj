@@ -49,6 +49,7 @@
     <Compile Include="Assets/Scripts/ThirdPersonCamera.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
     <Compile Include="Assets/Scripts/PlayerMovement.cs" />
+    <Compile Include="Assets/Scripts/Respawn.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/home/dystiopianvm/Unity/Hub/Editor/6000.2.2f1/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/Variations/mono/Managed/UnityEngine.dll</HintPath>
     </Reference>

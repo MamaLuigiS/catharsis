@@ -49,6 +49,7 @@
     <Compile Include="Assets/Scripts/ThirdPersonCamera.cs" />
     <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
     <Compile Include="Assets/Scripts/PlayerMovement.cs" />
+    <Compile Include="Assets/Scripts/Respawn.cs" />
     <None Include="Library/PackageCache/com.unity.ai.navigation@eb5635ad590d/ValidationExceptions.json" />
     <None Include="/home/dystiopianvm/Unity/Hub/Editor/6000.2.2f1/Editor/Data/Resources/PackageManager/BuiltInPackages/com.unity.modules.subsystems/package.json" />
     <None Include="Library/PackageCache/com.unity.render-pipelines.universal@9a08277289e6/package.json" />
