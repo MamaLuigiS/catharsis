@@ -12,16 +12,7 @@ public class Respawn : MonoBehaviour
 
     public void RespawnPlayer()
     {
-        CharacterController cc = GetComponent<CharacterController>();
-        if (cc != null)
-        {
-            cc.enabled = false;
-        }
         transform.position = respawnPosition;
-        if (cc != null)
-        {
-            cc.enabled = true;
-        }
         Debug.Log("RespawnPlayer");
     }
 
