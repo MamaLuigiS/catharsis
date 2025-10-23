@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,10 +8,11 @@ public class PlayerMovement : MonoBehaviour
     public float sprintSpeed = 5f;
     public float rotationSpeed = 200f;
     public float jumpHeight = 3f;
-    public float gravity = -5f;
+    public float gravity = -9.81f;
     public Transform cameraTransform;
-    
-    private CharacterController characterController;
+    public LayerMask groundLayer = 1;
+
+    private Rigidbody rb;
     private Vector3 velocity;
     private bool isGrounded;
     private float currentSpeed;
@@ -18,39 +20,52 @@ public class PlayerMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        rb = gameObject.GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         currentSpeed = walkSpeed;
+
+        if (rb != null)
+        {
+            rb.freezeRotation = true;
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        isGrounded = characterController.isGrounded;
+        HandleInput();
+        HandleJump();
+    }
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-        
+    private void FixedUpdate()
+    {
+        HandleMovment();
+        HandleGravity();
+    }
+    void HandleInput()
+    {
         if (Input.GetKey(KeyCode.LeftShift))
-        {
+        { 
             currentSpeed = sprintSpeed;
         }
         else
         {
             currentSpeed = walkSpeed;
         }
-        
+    }
+
+    void HandleMovment()
+    {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         
         Vector3 cameraForward = cameraTransform.forward;
         Vector3 cameraRight = cameraTransform.right;
-
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
+        
+        cameraForward.y = 0;
+        cameraRight.y = 0;
         cameraForward.Normalize();
         cameraRight.Normalize();
         
@@ -58,18 +73,70 @@ public class PlayerMovement : MonoBehaviour
 
         if (moveDirection.magnitude >= 0.1f)
         {
-            characterController.Move(moveDirection * currentSpeed * Time.deltaTime);
+            Vector3 targetVelocity = moveDirection * currentSpeed;
+
+            rb.velocity = new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.z);
+
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
-        
-        if (Input.GetButton("Jump") &&  isGrounded)
+        else
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+    }
+
+    void HandleGravity()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
+
+        if (!isGrounded)
+        {
+            rb.velocity += new Vector3(0, gravity * Time.deltaTime, 0);
+        }
+        else if (rb.velocity.y < 0)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        }
+
         
-        
+    }
+
+    void HandleJump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            float jumpVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+        }
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        foreach (ContactPoint contact in other.contacts)
+        {
+            if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
+            {
+                isGrounded = true;
+                break;
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        foreach (ContactPoint contact in other.contacts)
+        {
+            if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
+            {
+                Invoke("ResetGrounded", 0.1f);
+                break;
+            }
+        }
+    }
+
+    void ResetGrounded()
+    {
+        isGrounded = false;
     }
 }

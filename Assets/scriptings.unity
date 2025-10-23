@@ -254,6 +254,9 @@ MonoBehaviour:
   jumpHeight: 3
   gravity: -13
   cameraTransform: {fileID: 1258804500}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!143 &439002507
 CharacterController:
   m_ObjectHideFlags: 0
@@ -270,7 +273,7 @@ CharacterController:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.5
@@ -303,7 +306,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &439002509
@@ -443,6 +446,7 @@ GameObject:
   - component: {fileID: 1258804498}
   - component: {fileID: 1258804502}
   - component: {fileID: 1258804501}
+  - component: {fileID: 1258804503}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -575,7 +579,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258804497}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: edf2eca6436816d31ab1dee2019c365b, type: 3}
   m_Name: 
@@ -583,6 +587,26 @@ MonoBehaviour:
   target: {fileID: 439002505}
   offset: {x: 5, y: 5, z: 5}
   smoothing: 1
+--- !u!114 &1258804503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258804497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc01da8a7d0fa50ab14e0756956e08f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbitalCamera
+  target: {fileID: 439002505}
+  distance: 5
+  rotationSpeed: 2
+  minDistance: 1
+  maxDistance: 10
+  zoomSpeed: 2
+  minYAngle: 5
+  maxYAngle: 80
 --- !u!1 &1332134238
 GameObject:
   m_ObjectHideFlags: 0
